@@ -5,14 +5,13 @@
 #
 # (C) 2002 Scott Heavner (sdh@po.cwru.edu), GPL
 #
-# $Id: test.sh,v 1.5 2002/01/13 07:39:32 scottheavner Exp $
+# $Id: test.sh,v 1.6 2002/01/14 20:19:52 scottheavner Exp $
 #
 ##################################################################
 
 # Configuration ----------------------
 LDE=../lde/lde
 DIFF="diff -b"
-TMPFILE="/tmp/ldetests.$$"
 RM="rm -f"
 VERBOSE=1
 STOPONERROR=0
@@ -34,6 +33,8 @@ function ldetest {
   if [ x$VERBOSE = x1 ] ; then
 	echo -n "Test: $num ... "
   fi
+
+  TMPFILE=results/${num}.$$
 
   $* > $TMPFILE 2>&1
   if ! $DIFF $TMPFILE expected/${num} > results/diff1.$$ 2>&1 ; then
