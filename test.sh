@@ -5,7 +5,7 @@
 #
 # (C) 2002 Scott Heavner (sdh@po.cwru.edu), GPL
 #
-# $Id: test.sh,v 1.3 2002/01/12 17:50:58 scottheavner Exp $
+# $Id: test.sh,v 1.4 2002/01/13 04:15:53 scottheavner Exp $
 #
 ##################################################################
 
@@ -15,7 +15,7 @@ DIFF="diff -b"
 TMPFILE="/tmp/ldetests.$$"
 RM="rm -f"
 VERBOSE=1
-STOPONERROR=0
+STOPONERROR=1
 # End Configuration ------------------
 
 let TESTS=0
@@ -69,9 +69,9 @@ ldetest SEARCH_MINIX_MAGIC $LDE --all -t no -T search/minix-mag -O 16 -L 2 test.
 ldetest SEARCH_XIAFS_MAGIC $LDE -s 512 --all -t no -T search/xiafs-mag -O 60 -L 2 test.xiafs
 
 # Need to supress symbolic uid/gid will vary system to system
-ldetest EXT2_INODE2 $LDE -i 2 test.ext2
-ldetest MINIX_INODE2 $LDE -i 2 test.minix
-ldetest XIAFS_INODE2 $LDE -i 2 test.xiafs
+ldetest EXT2_INODE2 $LDE -i 2 --nosymbolic test.ext2
+ldetest MINIX_INODE2 $LDE -i 2 --nosymbolic test.minix
+ldetest XIAFS_INODE2 $LDE -i 2 --nosymbolic test.xiafs
 
 ldetest EXT2_BLOCK55 $LDE -b 55 test.ext2
 ldetest MINIX_BLOCK15 $LDE -b 15 test.minix
