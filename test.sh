@@ -5,7 +5,7 @@
 #
 # (C) 2002 Scott Heavner (sdh@po.cwru.edu), GPL
 #
-# $Id: test.sh,v 1.7 2002/01/14 22:17:34 scottheavner Exp $
+# $Id: test.sh,v 1.8 2002/05/29 05:35:53 scottheavner Exp $
 #
 ##################################################################
 
@@ -14,7 +14,7 @@ LDE=../lde/lde
 DIFF="diff -b"
 RM="rm -f"
 VERBOSE=1
-STOPONERROR=1
+STOPONERROR=0
 # End Configuration ------------------
 
 let TESTS=0
@@ -77,6 +77,9 @@ ldetest XIAFS_INODE2 $LDE -i 2 --nosymbolic test.xiafs
 ldetest EXT2_BLOCK55 $LDE -b 55 test.ext2
 ldetest MINIX_BLOCK15 $LDE -b 15 test.minix
 ldetest XIAFS_BLOCK55 $LDE -b 55 test.xiafs
+
+ldetest EXT2_BLOCK55_FORCE_EXT2 $LDE -b 55 -t ext2 test.ext2
+ldetest EXT2_BLOCK55_FORCE_MSDOS $LDE -b 55 -t msdos test.ext2
 
 ldetest EXT2_SUPERSCAN $LDE -P test.ext2
 ldetest XIAFS_SUPERSCAN $LDE -P test.xiafs
