@@ -5,7 +5,7 @@
 #
 # (C) 2002 Scott Heavner (sdh@po.cwru.edu), GPL
 #
-# $Id: test.sh,v 1.2 2002/01/12 05:48:04 scottheavner Exp $
+# $Id: test.sh,v 1.3 2002/01/12 17:50:58 scottheavner Exp $
 #
 ##################################################################
 
@@ -15,6 +15,7 @@ DIFF="diff -b"
 TMPFILE="/tmp/ldetests.$$"
 RM="rm -f"
 VERBOSE=1
+STOPONERROR=0
 # End Configuration ------------------
 
 let TESTS=0
@@ -47,7 +48,9 @@ function ldetest {
 
   if [ x$success != x0 ] ; then
 	echo "*** failed with code $success ***************"
-	exit
+	if [ x$STOPONERROR = x1 ] ; then	
+		exit
+	fi
   else
 	if [ x$VERBOSE = x1 ] ; then
 		echo ok
@@ -60,12 +63,12 @@ function ldetest {
   let TESTS=$TESTS+1
 }
 
-ldetest SEARCH_EXT2_MAGIC $LDE --all -t no -T search/ext2mag test.ext2 -O 56 -L 2
+# These fail on cygwin if test.ext2 comes before -O
+ldetest SEARCH_EXT2_MAGIC $LDE --all -t no -T search/ext2mag -O 56 -L 2 test.ext2
+ldetest SEARCH_MINIX_MAGIC $LDE --all -t no -T search/minix-mag -O 16 -L 2 test.minix
+ldetest SEARCH_XIAFS_MAGIC $LDE -s 512 --all -t no -T search/xiafs-mag -O 60 -L 2 test.xiafs
 
-ldetest SEARCH_MINIX_MAGIC $LDE --all -t no -T search/minix-mag test.minix -O 16 -L 2
-
-ldetest SEARCH_XIAFS_MAGIC $LDE -s 512 --all -t no -T search/xiafs-mag test.xiafs -O 60 -L 2
-
+# Need to supress symbolic uid/gid will vary system to system
 ldetest EXT2_INODE2 $LDE -i 2 test.ext2
 ldetest MINIX_INODE2 $LDE -i 2 test.minix
 ldetest XIAFS_INODE2 $LDE -i 2 test.xiafs
