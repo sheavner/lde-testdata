@@ -5,7 +5,7 @@
 #
 # (C) 2002 Scott Heavner (sdh@po.cwru.edu), GPL
 #
-# $Id: test.sh,v 1.4 2002/01/13 04:15:53 scottheavner Exp $
+# $Id: test.sh,v 1.5 2002/01/13 07:39:32 scottheavner Exp $
 #
 ##################################################################
 
@@ -15,7 +15,7 @@ DIFF="diff -b"
 TMPFILE="/tmp/ldetests.$$"
 RM="rm -f"
 VERBOSE=1
-STOPONERROR=1
+STOPONERROR=0
 # End Configuration ------------------
 
 let TESTS=0
