@@ -5,7 +5,7 @@
 #
 # (C) 2002 Scott Heavner (sdh@po.cwru.edu), GPL
 #
-# $Id: test.sh,v 1.8 2002/05/29 05:35:53 scottheavner Exp $
+# $Id: test.sh,v 1.9 2003/12/06 07:00:21 scottheavner Exp $
 #
 ##################################################################
 
@@ -70,9 +70,9 @@ ldetest SEARCH_MINIX_MAGIC $LDE -a -t no -T search/minix-mag -O 16 -L 2 test.min
 ldetest SEARCH_XIAFS_MAGIC $LDE -s 512 -a -t no -T search/xiafs-mag -O 60 -L 2 test.xiafs
 
 # Need to supress symbolic uid/gid will vary system to system
-ldetest EXT2_INODE2 $LDE -i 2 --nosymbolic test.ext2
-ldetest MINIX_INODE2 $LDE -i 2 --nosymbolic test.minix
-ldetest XIAFS_INODE2 $LDE -i 2 --nosymbolic test.xiafs
+ldetest EXT2_INODE2 $LDE -yi 2 test.ext2
+ldetest MINIX_INODE2 $LDE -yi 2 test.minix
+ldetest XIAFS_INODE2 $LDE -yi 2 test.xiafs
 
 ldetest EXT2_BLOCK55 $LDE -b 55 test.ext2
 ldetest MINIX_BLOCK15 $LDE -b 15 test.minix
@@ -85,20 +85,20 @@ ldetest EXT2_SUPERSCAN $LDE -P test.ext2
 ldetest XIAFS_SUPERSCAN $LDE -P test.xiafs
 ldetest MINIX_SUPERSCAN $LDE -P test.minix
 
-ldetest EXT2_ILOOKUP $LDE --ilookup --recoverable -S BBBBBBBBB test.ext2
-ldetest XIAFS_ILOOKUP $LDE --ilookup --recoverable -S BBBBBBBBB test.xiafs
-ldetest MINIX_ILOOKUP $LDE --ilookup --recoverable -S BBBBBBBBB test.minix
+ldetest EXT2_ILOOKUP $LDE -kRS BBBBBBBBB test.ext2
+ldetest XIAFS_ILOOKUP $LDE -kRS BBBBBBBBB test.xiafs
+ldetest MINIX_ILOOKUP $LDE -kRS BBBBBBBBB test.minix
 
-ldetest EXT2_ILOOKUPALL $LDE --ilookup -a -S BBBBBBBBB test.ext2
-ldetest XIAFS_ILOOKUPALL $LDE --ilookup -a -S Basic test.xiafs
-ldetest MINIX_ILOOKUPALL $LDE --ilookup -a -S ,, -O 18 test.minix
+ldetest EXT2_ILOOKUPALL $LDE -kaS BBBBBBBBB test.ext2
+ldetest XIAFS_ILOOKUPALL $LDE -kaS Basic test.xiafs
+ldetest MINIX_ILOOKUPALL $LDE -kaS ,, -O 18 test.minix
 
 ldetest MINIX_RECOVER $LDE -i 0xC -f results/MINIX_RECOVER test.minix
 ldetest XIAFS_RECOVER $LDE -i 0x1B -f results/XIAFS_RECOVER test.xiafs
 
-ldetest EXT2_INDIRECTS $LDE --indirects test.ext2
-ldetest XIAFS_INDIRECTS $LDE --indirects test.xiafs
-ldetest MINIX_INDIRECTS $LDE --indirects test.minix
+ldetest EXT2_INDIRECTS $LDE -j test.ext2
+ldetest XIAFS_INDIRECTS $LDE -j test.xiafs
+ldetest MINIX_INDIRECTS $LDE -j test.minix
 
 echo ${SUCCESS} of ${TESTS} tests completed successfully
 
