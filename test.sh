@@ -5,7 +5,7 @@
 #
 # (C) 2002 Scott Heavner (sdh@po.cwru.edu), GPL
 #
-# $Id: test.sh,v 1.6 2002/01/14 20:19:52 scottheavner Exp $
+# $Id: test.sh,v 1.7 2002/01/14 22:17:34 scottheavner Exp $
 #
 ##################################################################
 
@@ -14,7 +14,7 @@ LDE=../lde/lde
 DIFF="diff -b"
 RM="rm -f"
 VERBOSE=1
-STOPONERROR=0
+STOPONERROR=1
 # End Configuration ------------------
 
 let TESTS=0
@@ -65,9 +65,9 @@ function ldetest {
 }
 
 # These fail on cygwin if test.ext2 comes before -O
-ldetest SEARCH_EXT2_MAGIC $LDE --all -t no -T search/ext2mag -O 56 -L 2 test.ext2
-ldetest SEARCH_MINIX_MAGIC $LDE --all -t no -T search/minix-mag -O 16 -L 2 test.minix
-ldetest SEARCH_XIAFS_MAGIC $LDE -s 512 --all -t no -T search/xiafs-mag -O 60 -L 2 test.xiafs
+ldetest SEARCH_EXT2_MAGIC $LDE -a -t no -T search/ext2mag -O 56 -L 2 test.ext2
+ldetest SEARCH_MINIX_MAGIC $LDE -a -t no -T search/minix-mag -O 16 -L 2 test.minix
+ldetest SEARCH_XIAFS_MAGIC $LDE -s 512 -a -t no -T search/xiafs-mag -O 60 -L 2 test.xiafs
 
 # Need to supress symbolic uid/gid will vary system to system
 ldetest EXT2_INODE2 $LDE -i 2 --nosymbolic test.ext2
@@ -78,20 +78,20 @@ ldetest EXT2_BLOCK55 $LDE -b 55 test.ext2
 ldetest MINIX_BLOCK15 $LDE -b 15 test.minix
 ldetest XIAFS_BLOCK55 $LDE -b 55 test.xiafs
 
-ldetest EXT2_SUPERSCAN $LDE --superscan test.ext2
-ldetest XIAFS_SUPERSCAN $LDE --superscan test.xiafs
-ldetest MINIX_SUPERSCAN $LDE --superscan test.minix
+ldetest EXT2_SUPERSCAN $LDE -P test.ext2
+ldetest XIAFS_SUPERSCAN $LDE -P test.xiafs
+ldetest MINIX_SUPERSCAN $LDE -P test.minix
 
 ldetest EXT2_ILOOKUP $LDE --ilookup --recoverable -S BBBBBBBBB test.ext2
 ldetest XIAFS_ILOOKUP $LDE --ilookup --recoverable -S BBBBBBBBB test.xiafs
 ldetest MINIX_ILOOKUP $LDE --ilookup --recoverable -S BBBBBBBBB test.minix
 
-ldetest EXT2_ILOOKUPALL $LDE --ilookup --all -S BBBBBBBBB test.ext2
-ldetest XIAFS_ILOOKUPALL $LDE --ilookup --all -S Basic test.xiafs
-ldetest MINIX_ILOOKUPALL $LDE --ilookup --all -S ,, -O 18 test.minix
+ldetest EXT2_ILOOKUPALL $LDE --ilookup -a -S BBBBBBBBB test.ext2
+ldetest XIAFS_ILOOKUPALL $LDE --ilookup -a -S Basic test.xiafs
+ldetest MINIX_ILOOKUPALL $LDE --ilookup -a -S ,, -O 18 test.minix
 
-ldetest MINIX_RECOVER $LDE -i 0xC --file results/MINIX_RECOVER test.minix
-ldetest XIAFS_RECOVER $LDE -i 0x1B --file results/XIAFS_RECOVER test.xiafs
+ldetest MINIX_RECOVER $LDE -i 0xC -f results/MINIX_RECOVER test.minix
+ldetest XIAFS_RECOVER $LDE -i 0x1B -f results/XIAFS_RECOVER test.xiafs
 
 ldetest EXT2_INDIRECTS $LDE --indirects test.ext2
 ldetest XIAFS_INDIRECTS $LDE --indirects test.xiafs
