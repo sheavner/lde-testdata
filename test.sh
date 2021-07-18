@@ -3,14 +3,21 @@
 ##################################################################
 # Automated test scripts for lde
 #
-# (C) 2002 Scott Heavner (sdh@po.cwru.edu), GPL
-#
-# $Id: test.sh,v 1.9 2003/12/06 07:00:21 scottheavner Exp $
+# (C) 2002, 2021 Scott Heavner, GPL
 #
 ##################################################################
 
+cd "${0%/*}"
+
 # Configuration ----------------------
-LDE=../lde/lde
+if [ -f ../lde -a -x ../lde ] ; then
+  LDE=../lde
+elif [ -f ../lde/lde -a -x ../lde/lde ] ; then
+  LDE=../lde/lde
+else
+  echo "Can't find lde executable, aborting test."
+  exit 1
+fi
 #LDE='/cygdrive/c/Users/xbox/CMakeBuilds/d952c480-d245-a03c-9cdc-2540725d7f7e/build/x64-Debug (default)/lde.exe'
 DIFF="diff -b"
 RM="rm -f"
@@ -19,6 +26,11 @@ ECHO_CMDS=0
 RETAIN=0
 STOPONERROR=0
 # End Configuration ------------------
+
+ONETEST=
+if [ x$1 != x ] ; then
+  ONETEST=$1
+fi
 
 let TESTS=0
 let SUCCESS=0
@@ -32,6 +44,10 @@ function ldetest {
   # $1 = test label
   # $2+ = command
 
+  if [ x$ONETEST != x -a x$ONETEST != x$1 ] ; then
+    return
+  fi
+
   success=0
 
   num=$1
@@ -43,19 +59,18 @@ function ldetest {
 
   TMPFILE=results/${num}.$$
 
-  "$@" > $TMPFILE 2>&1
-  if ! $DIFF $TMPFILE expected/${num} > results/diff1.$$ 2>&1 ; then
-	success=1
-  fi
-
-  if [ -f results/${num} ] ; then
+  if ! "$@" > $TMPFILE 2>&1 ; then
+	success='Execution failed.'
+  elif ! $DIFF $TMPFILE expected/${num} > results/diff1.$$ 2>&1 ; then
+	success='Unexpected output.'
+  elif [ -f results/${num} ] ; then
 	if ! $DIFF results/${num} expected/${num}_RESULTS > results/diff2.$$ 2>&1 ; then
-		success=2
+		success='Unexpected results.'
 	fi
   fi
 
   if [ x$success != x0 ] ; then
-	echo "*** failed with code $success ***************"
+	echo "*** $success ***************"
 	if [ x$STOPONERROR = x1 ] ; then	
 		exit
 	fi
@@ -64,7 +79,6 @@ function ldetest {
 		echo ok
 	fi
   	let SUCCESS=$SUCCESS+1
-
   fi
   if [ x$RETAIN != x1 ] ; then
     $RM $TMPFILE results/diff1.$$ results/diff2.$$ results/${num}
@@ -75,8 +89,7 @@ function ldetest {
 
 $RM results/* 2> /dev/null
 
-"$LDE" -v > /dev/null
-if [ $? != 0 ] ; then
+if ! "$LDE" -v > /dev/null ; then
   echo "Cannot run $LDE"
   exit 1
 fi
