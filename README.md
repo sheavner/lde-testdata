@@ -41,3 +41,13 @@ mount ./test.vfat /mnt2
 cd /mnt2/dir3.100entries/
 cp /mnt/dir3.100entries/* .
 umount  /mnt2
+
+# FAT16 has warnings about needing mount flags if we're smaller than 16MB
+dd if=/dev/zero bs=1M count=16 of=./test.fat16
+mkfs.vfat -v -f2 -n LDEFAT16 -r224 -F16 ./test.fat16
+
+mkfs.vfat -v -f2 -n LDEFAT32 -r224 -F32 -S512 ./test.vfat32
+
+
+
+
